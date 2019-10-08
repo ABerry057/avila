@@ -1,1 +1,0 @@
-I ensure the figures directory is created.

@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 
 # add column names for convenience
-feature_names = ['ic-dist', 'u-margin', 'l-margin', 'exp', 'rows', 'mod-ratio', 'il-space', 'weight', 'peaks', 'mod/il-space', 'class']
+feature_names = ['ic-dist', 'u-margin', 'l-margin', 'exp', 'rows', 'mod-ratio', 'il-space', 'weight', 'peaks', 'mod_over_il-space', 'class']
 av_train = pd.read_csv('avila-tr.csv', names=feature_names)
 av_test = pd.read_csv('avila-ts.csv', names=feature_names)
 
