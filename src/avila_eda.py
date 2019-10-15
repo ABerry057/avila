@@ -1,5 +1,8 @@
+
 import pandas as pd
 import numpy as np
+from sklearn.feature_selection import f_regression, mutual_info_regression
+from sklearn.decomposition import PCA
 from matplotlib import pylab as plt
 from os.path import dirname, abspath
 parent_dir = dirname(dirname(abspath(__file__))) #parent directory path
@@ -27,31 +30,33 @@ avila_p = pd.read_csv(parent_dir + "/data/avila_p_train.csv",
 balance = avila_p['class'].value_counts(normalize=True)
 print(balance)
 #
-##histograms for features
-#for feat in avila_p.columns:
-#    plt.hist(avila_p[feat],
-#             label = feat, 
-#             bins = 50)
-#    plt.xlabel(feat)
-#    plt.ylabel('Count')
-#    plt.title('Distribution of ' + feat)
-#    plt.tight_layout()
+#histograms for features
+for feat in avila_p.columns:
+    plt.hist(avila_p[feat],
+             label = feat, 
+             bins = 50)
+    plt.xlabel(feat)
+    plt.ylabel('Count')
+    plt.title('Distribution of ' + feat)
+    plt.tight_layout()
+    #uncomment the following lines to save generated figures
 #    plt.savefig(parent_dir + '/figures/' + feat + '_histogram' +'.png',
 #                dpi=300)
-#    plt.show()
-#    
-##correlation matrix
-#corrmat = avila_p.corr()
-#
-#all_cols = corrmat.sort_values('class',ascending=False)['class'].index 
-#cols = all_cols[:11] #do not include target variable
-#
-#pd.plotting.scatter_matrix(avila_p[cols],
-#                           #c = avila_p['class'],
-#                           figsize=(15, 15), marker='o',
-#                           hist_kwds={'bins': 20},
-#                           s=60,
-#                           alpha=.8)
-#plt.savefig(parent_dir + '/figures/scattermatrix.png',
-#            dpi=300)
-#plt.show()
+    plt.show()
+
+#f-regression and mutual information
+X = avila_p.drop('class', axis=1)
+y = avila_p['class']
+f_test, p_values = f_regression(X, y)
+print('f score',f_test)
+print('p values',p_values)
+mi = mutual_info_regression(X, y)
+print('mi',mi)
+
+#PCA
+pca = PCA()
+pca.fit(X)
+plt.plot(np.cumsum(pca.explained_variance_ratio_))
+plt.xlabel('Nr. components')
+plt.ylabel('variance explained')
+plt.show()
