@@ -44,6 +44,19 @@ for feat in avila_p.columns:
 #                dpi=300)
     plt.show()
 
+#scatter matrix
+corrmat = avila_p.corr()
+
+all_cols = corrmat.sort_values('class',ascending=False)['class'].index 
+cols = all_cols[:10] # positively correlated features
+#cols = ['class']+[col for col in all_cols if '_nan' not in col][:-10:-1] # negatively correlated features
+
+pd.plotting.scatter_matrix(avila_p[cols],c = avila_p['class'], figsize=(15, 15), marker='o',
+                           hist_kwds={'bins': 20}, s=60, alpha=.8)
+#uncomment to save
+#plt.savefig(parent_dir + '/figures/scatter_matrix_avila.png',dpi=300)
+plt.show()
+
 #f-regression and mutual information
 X = avila_p.drop('class', axis=1)
 y = avila_p['class']
@@ -59,4 +72,7 @@ pca.fit(X)
 plt.plot(np.cumsum(pca.explained_variance_ratio_))
 plt.xlabel('Nr. components')
 plt.ylabel('variance explained')
+#uncomment to save
+#plt.savefig(parent_dir + '/figures/' + 'pca_explainedVariance' +'.png',
+#                dpi=300)
 plt.show()
