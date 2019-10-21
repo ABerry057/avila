@@ -25,5 +25,5 @@ y_test = le.transform(y_test)
 av_train['class'] = y_train
 av_test['class'] = y_test
 # save preprocessed variables as csv files
-av_train.to_csv('avila_p_train.csv')
-av_test.to_csv('avila_p_test.csv')
+#av_train.to_csv('avila_p_train.csv')
+#av_test.to_csv('avila_p_test.csv')

@@ -44,6 +44,23 @@ for feat in avila_p.columns:
 #                dpi=300)
     plt.show()
 
+#histogram for just class balance
+plt.hist(avila_p['class'],
+         bins = 12,
+         density = True,
+         color = "#BD2677")
+plt.xlabel("Target Variable Class (Copyist Identity)")
+plt.ylabel('Percentage of Data Points')
+plt.title('Class Balance')
+plt.xticks([0,1,2,3,4,5,6,7,8,9,10,11],
+           ['Class 0','Class 1','Class 2','Class 3','Class 4','Class 5','Class 6','Class 7','Class 8','Class 9','Class 10','Class 11'],
+           rotation = 30)
+plt.tight_layout()
+#uncomment the following lines to save generated figures
+plt.savefig(parent_dir + '/figures/classBalance_histogram.png',
+            dpi=300)
+plt.show()
+
 #scatter matrix
 corrmat = avila_p.corr()
 
