@@ -25,6 +25,8 @@ avila_p = pd.read_csv(parent_dir + "/data/avila_p_train.csv",
                       header = 0,
                       names=feature_names,
                       dtype=dtypes)
+#remove broken data point
+avila_p.drop(avila_p.index[6619], inplace=True)
 
 #balance of target variable classes
 balance = avila_p['class'].value_counts(normalize=True)
@@ -57,9 +59,33 @@ plt.xticks([0,1,2,3,4,5,6,7,8,9,10,11],
            rotation = 30)
 plt.tight_layout()
 #uncomment the following lines to save generated figures
-plt.savefig(parent_dir + '/figures/classBalance_histogram.png',
-            dpi=300)
+#plt.savefig(parent_dir + '/figures/classBalance_histogram.png',
+#            dpi=300)
 plt.show()
+
+#correlation matrix
+avila_p_c = avila_p.drop(['class'], axis=1) #remove class
+plt.figure(figsize=(10,10))
+plt.matshow(avila_p_c.corr(),vmin=-1,vmax=1,cmap='seismic',fignum=0)
+plt.colorbar(label='corr. coeff.')
+plt.xticks(np.arange(avila_p_c.corr().shape[0]),list(avila_p_c.corr().columns),rotation=90)
+plt.yticks(np.arange(avila_p_c.corr().shape[0]),list(avila_p_c.corr().columns))
+plt.title("Feature Correlation Matrix", pad = 20)
+plt.tight_layout()
+#uncomment to save
+#plt.savefig(parent_dir + '/figures/corr_coeff.png',dpi=300)
+plt.show()
+
+#boxplot for each feature with class
+for feat in avila_p_c.columns:
+    avila_p[[feat,'class']].boxplot(by='class')
+    plt.xlabel('Class')
+    plt.ylabel('Normalized Value')
+    plt.suptitle('')
+    plt.title(f'Distribution of {feat} by class')
+    plt.grid(b=False)
+    plt.savefig(f'{parent_dir}/figures/{feat}_boxplot.png',dpi=300)
+    plt.show()
 
 #scatter matrix
 corrmat = avila_p.corr()
