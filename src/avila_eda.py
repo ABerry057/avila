@@ -115,6 +115,7 @@ pca.fit(X)
 plt.plot(np.cumsum(pca.explained_variance_ratio_))
 plt.xlabel('Nr. components')
 plt.ylabel('variance explained')
+plt.title("Variance Explained by PCA Component")
 #uncomment to save
 #plt.savefig(parent_dir + '/figures/' + 'pca_explainedVariance' +'.png',
 #                dpi=300)
