@@ -11,7 +11,9 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import make_scorer
 from sklearn.pipeline import make_pipeline
+import time
 from os.path import dirname, abspath
+
 parent_dir = dirname(dirname(abspath(__file__))) #parent directory path
 
 data = pd.read_csv(parent_dir + "/data/p_set.csv")
@@ -41,9 +43,12 @@ def five_fold_CV_rfc(iter=10):
     rfc_param_grid = {"randomforestclassifier__max_depth": range(1,31), "randomforestclassifier__min_samples_split": range(2,21)}
     test_scores = []
     for i in range(10):
+        init_time = time.time()
         print(f"Iteration {i+1}")
         grid, test_score = ML_pipeline_kfold_GridSearchCV(X = X, y = y, random_state = i*119, n_folds = 5, model = rfc, param_grid = rfc_param_grid)
         print(f'For iteration {i}, the best hyperparameters are {grid.best_params_}')
+        time_elapsed = time.time() - init_time
+        print(f"Iteration {i+1} ran in {time_elapsed} seconds")
         test_scores.append(test_score)
     print(f'Mean score: {np.around(np.mean(test_scores),3)} +/- {np.around(np.std(test_scores),3)}')
     return (np.mean(test_scores), np.std(test_scores))
@@ -57,12 +62,16 @@ def five_fold_CV_logit(iter=10):
     logit_param_grid = {'logisticregression__C': np.logspace(-5,4,num=10)}
     test_scores = []
     for i in range(iter):
+        init_time = time.time()
         print(f"Iteration {i+1}")
         grid, test_score = ML_pipeline_kfold_GridSearchCV(X = X, y = y, random_state = i*119, n_folds = 5, model = logit, param_grid = logit_param_grid)
         print(f'For iteration {i}, the best hyperparameters are {grid.best_params_}')
+        time_elapsed = time.time() - init_time
+        print(f"Iteration {i+1} ran in {time_elapsed} seconds")
         test_scores.append(test_score)
     print(f'Mean score: {np.around(np.mean(test_scores),3)} +/- {np.around(np.std(test_scores),3)}')
     return (np.mean(test_scores), np.std(test_scores))
-           
-#random_mean, random_std = five_fold_CV_rfc()
-logit_mean, logit_std = five_fold_CV_logit(2)
+
+
+random_mean, random_std = five_fold_CV_rfc()
+logit_mean, logit_std = five_fold_CV_logit()
