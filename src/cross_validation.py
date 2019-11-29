@@ -9,6 +9,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import make_scorer
 from sklearn.pipeline import make_pipeline
 import time
@@ -38,26 +39,29 @@ def ML_pipeline_kfold_GridSearchCV(X,y,random_state,n_folds, model, param_grid):
     grid.fit(X_other, y_other)
     return grid, grid.score(X_test, y_test)
 
+
 def five_fold_CV_rfc(iter=10):
-    rfc = RandomForestClassifier(n_estimators = 10, random_state = 20, class_weight="balanced")
+    rfc = RandomForestClassifier(n_estimators = 10, random_state = 20, class_weight="balanced", n_jobs=-1)
     rfc_param_grid = {"randomforestclassifier__max_depth": range(1,31), "randomforestclassifier__min_samples_split": range(2,21)}
     test_scores = []
     for i in range(10):
         init_time = time.time()
         print(f"Iteration {i+1}")
         grid, test_score = ML_pipeline_kfold_GridSearchCV(X = X, y = y, random_state = i*119, n_folds = 5, model = rfc, param_grid = rfc_param_grid)
-        print(f'For iteration {i}, the best hyperparameters are {grid.best_params_}')
+        print(f'For iteration {i+1}, the best hyperparameters are {grid.best_params_}')
         time_elapsed = time.time() - init_time
         print(f"Iteration {i+1} ran in {time_elapsed} seconds")
         test_scores.append(test_score)
     print(f'Mean score: {np.around(np.mean(test_scores),3)} +/- {np.around(np.std(test_scores),3)}')
     return (np.mean(test_scores), np.std(test_scores))
 
+
 def five_fold_CV_logit(iter=10):
     logit = LogisticRegression(penalty = "l1", 
                                solver = "saga", 
                                max_iter = 8000, 
-                               multi_class = "auto", 
+                               multi_class = "auto",
+                               n_jobs = -1,
                                random_state = 20)  # fixed random state for model
     logit_param_grid = {'logisticregression__C': np.logspace(-5,4,num=10)}
     test_scores = []
@@ -65,7 +69,7 @@ def five_fold_CV_logit(iter=10):
         init_time = time.time()
         print(f"Iteration {i+1}")
         grid, test_score = ML_pipeline_kfold_GridSearchCV(X = X, y = y, random_state = i*119, n_folds = 5, model = logit, param_grid = logit_param_grid)
-        print(f'For iteration {i}, the best hyperparameters are {grid.best_params_}')
+        print(f'For iteration {i+1}, the best hyperparameters are {grid.best_params_}')
         time_elapsed = time.time() - init_time
         print(f"Iteration {i+1} ran in {time_elapsed} seconds")
         test_scores.append(test_score)
@@ -73,5 +77,27 @@ def five_fold_CV_logit(iter=10):
     return (np.mean(test_scores), np.std(test_scores))
 
 
-random_mean, random_std = five_fold_CV_rfc()
-logit_mean, logit_std = five_fold_CV_logit()
+def five_fold_CV_kns(iter=10):
+    """
+    Notes: 1 iteration over the whole data set takes about 170 seconds with one core, about 60 seconds with all cores.
+    Accuracy: 0.951 +/- 0.002
+    """
+    kns = KNeighborsClassifier(algorithm = "auto",
+                               n_jobs = -1)
+    kns_param_grid = {"kneighborsclassifier__n_neighbors": range(5,15),
+                         "kneighborsclassifier__weights": ["uniform", "distance"]}
+    test_scores = []
+    for i in range(iter):
+        init_time = time.time()
+        print(f"Iteration {i+1}")
+        grid, test_score = ML_pipeline_kfold_GridSearchCV(X = X, y = y, random_state = i*119, n_folds = 5, model = kns, param_grid = kns_param_grid)
+        print(f'For iteration {i+1}, the best hyperparameters are {grid.best_params_}')
+        time_elapsed = time.time() - init_time
+        print(f"Iteration {i+1} ran in {time_elapsed} seconds")
+        test_scores.append(test_score)
+    print(f'Mean score: {np.around(np.mean(test_scores),3)} +/- {np.around(np.std(test_scores),3)}')
+    return (np.mean(test_scores), np.std(test_scores))
+
+#random_mean, random_std = five_fold_CV_rfc()
+#logit_mean, logit_std = five_fold_CV_logit(5)
+kns_mean, knss_std = five_fold_CV_kns(10)
