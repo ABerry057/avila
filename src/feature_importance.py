@@ -75,4 +75,6 @@ plt.title("Permutation Importances (Test Set)")
 plt.xlabel('Accuracy Score with Perturbed Feature')
 plt.legend()
 plt.tight_layout()
+# to save the figure, uncomment the line below
+#plt.savefig(parent_dir + '/figures/permutation_importance.png',dpi=300)
 plt.show()

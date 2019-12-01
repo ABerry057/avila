@@ -1,5 +1,5 @@
 """
-T-distributed stochastic neighbor embeding visualiation
+t-distributed stochastic neighbor embedding visualiation
 """
 
 import numpy as np
@@ -21,15 +21,17 @@ tsne = TSNE(n_components=2, verbose=1, perplexity=75, n_iter=500)
 tsne_results = tsne.fit_transform(X)
 
 data['Class'] = y
-data['TSNE Axis 1'] = tsne_results[:,0]
-data['TSNE Axis 2'] = tsne_results[:,1]
+data['t-SNE Axis 1'] = tsne_results[:,0]
+data['t-SNE Axis 2'] = tsne_results[:,1]
 
 plt.figure(figsize=(16,12))
 sns.scatterplot(
-    x="TSNE Axis 1", y="TSNE Axis 2",
+    x="t-SNE Axis 1", y="t-SNE Axis 2",
     hue="Class",
     palette=sns.color_palette("hls", 12),
     data=data,
     legend="full",
     alpha=0.6
 )
+plt.title("Data Set visualized via t-Distributed Stochastic Neighbor Embedding")
+plt.savefig(parent_dir + '/figures/t-sne.png',dpi=300)
