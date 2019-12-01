@@ -13,7 +13,6 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import make_scorer
 from sklearn.pipeline import make_pipeline
-import time
 from os.path import dirname, abspath
 
 parent_dir = dirname(dirname(abspath(__file__))) #parent directory path
@@ -35,47 +34,40 @@ def ML_pipeline_kfold_GridSearchCV(X,y,random_state,n_folds, model, param_grid):
     pipe = make_pipeline(model)
     # prepare gridsearch
     grid = GridSearchCV(pipe, param_grid=param_grid,scoring = make_scorer(accuracy_score),
-                        cv=kf, return_train_score = True,iid=True)
+                        cv=kf, return_train_score = True,iid=True, verbose=10)
     # do kfold CV on _other
     grid.fit(X_other, y_other)
     return grid, grid.score(X_test, y_test)
 
 
-def n_fold_CV_rfc(iter=10, n_folds=5):
+def n_fold_CV_rfc(n_iter=10, n_folds=5):
     rfc = RandomForestClassifier(n_estimators = 10, random_state = 20, class_weight="balanced", n_jobs=-1)
-    rfc_param_grid = {"randomforestclassifier__max_depth": range(1,31), "randomforestclassifier__min_samples_split": range(2,21)}
+    rfc_param_grid = {"randomforestclassifier__max_depth": range(1,21), "randomforestclassifier__min_samples_split": range(2,16)}
     test_scores = []
-    for i in range(10):
-        init_time = time.time()
+    for i in range(n_iter):
         print(f"Iteration {i+1}")
         grid, test_score = ML_pipeline_kfold_GridSearchCV(X = X, y = y, random_state = i*119, n_folds = n_folds, model = rfc, param_grid = rfc_param_grid)
         print(f'For iteration {i+1}, the best hyperparameters are {grid.best_params_}')
-        time_elapsed = time.time() - init_time
-        print(f"Iteration {i+1} ran in {time_elapsed} seconds")
         test_scores.append(test_score)
     print(f'Mean score: {np.around(np.mean(test_scores),3)} +/- {np.around(np.std(test_scores),3)}')
     return (np.mean(test_scores), np.std(test_scores))
 
 
-def n_fold_CV_gbc(iter=10, n_folds=5):
+def n_fold_CV_gbc(n_iter=10, n_folds=5):
     gbc = GradientBoostingClassifier(loss="deviance", random_state=20)
-    gbc_param_grid = {"gradientboostingclassifier__learning_rate": np.logspace(-5,4,num=10),
-                      "gradientboostingclassifier__min_samples_split": range(2,9),
-                      "gradientboostingclassifier__max_depth": range(3,11)}
+    gbc_param_grid = {"gradientboostingclassifier__min_samples_split": range(2,16),
+                      "gradientboostingclassifier__max_depth": range(1,21)}
     test_scores = []
-    for i in range(10):
-        init_time = time.time()
+    for i in range(n_iter):
         print(f"Iteration {i+1}")
         grid, test_score = ML_pipeline_kfold_GridSearchCV(X = X, y = y, random_state = i*119, n_folds = n_folds, model = gbc, param_grid = gbc_param_grid)
         print(f'For iteration {i+1}, the best hyperparameters are {grid.best_params_}')
-        time_elapsed = time.time() - init_time
-        print(f"Iteration {i+1} ran in {time_elapsed} seconds")
         test_scores.append(test_score)
     print(f'Mean score: {np.around(np.mean(test_scores),3)} +/- {np.around(np.std(test_scores),3)}')
     return (np.mean(test_scores), np.std(test_scores))
 
 
-def n_fold_CV_logit(iter=10, n_folds=5):
+def n_fold_CV_logit(n_iter=10, n_folds=5):
     logit = LogisticRegression(penalty = "l1", 
                                solver = "saga", 
                                max_iter = 8000, 
@@ -84,19 +76,16 @@ def n_fold_CV_logit(iter=10, n_folds=5):
                                random_state = 20)  # fixed random state for model
     logit_param_grid = {'logisticregression__C': np.logspace(-5,4,num=10)}
     test_scores = []
-    for i in range(iter):
-        init_time = time.time()
+    for i in range(n_iter):
         print(f"Iteration {i+1}")
         grid, test_score = ML_pipeline_kfold_GridSearchCV(X = X, y = y, random_state = i*119, n_folds = n_folds, model = logit, param_grid = logit_param_grid)
         print(f'For iteration {i+1}, the best hyperparameters are {grid.best_params_}')
-        time_elapsed = time.time() - init_time
-        print(f"Iteration {i+1} ran in {time_elapsed} seconds")
         test_scores.append(test_score)
     print(f'Mean score: {np.around(np.mean(test_scores),3)} +/- {np.around(np.std(test_scores),3)}')
     return (np.mean(test_scores), np.std(test_scores))
 
 
-def n_fold_CV_kns(iter=10, n_folds=5):
+def n_fold_CV_kns(n_iter=10, n_folds=5):
     """
     Notes: 1 iteration over the whole data set takes about 170 seconds with one core, about 60 seconds with all cores.
     Accuracy: 0.951 +/- 0.002
@@ -105,20 +94,17 @@ def n_fold_CV_kns(iter=10, n_folds=5):
     kns = KNeighborsClassifier(algorithm = "auto",
                                weights = "distance",
                                n_jobs = -1)
-    kns_param_grid = {"kneighborsclassifier__n_neighbors": range(5,15)}
+    kns_param_grid = {"kneighborsclassifier__n_neighbors": range(5,9)}
     test_scores = []
-    for i in range(iter):
-        init_time = time.time()
+    for i in range(n_iter):
         print(f"Iteration {i+1}")
         grid, test_score = ML_pipeline_kfold_GridSearchCV(X = X, y = y, random_state = i*119, n_folds = n_folds, model = kns, param_grid = kns_param_grid)
         print(f'For iteration {i+1}, the best hyperparameters are {grid.best_params_}')
-        time_elapsed = time.time() - init_time
-        print(f"Iteration {i+1} ran in {time_elapsed} seconds")
         test_scores.append(test_score)
     print(f'Mean score: {np.around(np.mean(test_scores),3)} +/- {np.around(np.std(test_scores),3)}')
     return (np.mean(test_scores), np.std(test_scores))
 
-#random_mean, random_std = n_fold_CV_rfc(iter=5, n_folds=5)
-#logit_mean, logit_std = n_fold_CV_logit(iter=5, n_folds=5)
-kns_mean, knss_std = n_fold_CV_kns(iter=2, n_folds=8)
-#gbc_mean, gbc_std = n_fold_CV_gbc(iter=1, n_folds=5)
+#random_mean, random_std = n_fold_CV_rfc(n_iter=1, n_folds=5)
+#logit_mean, logit_std = n_fold_CV_logit(n_iter=5, n_folds=5)
+#kns_mean, knss_std = n_fold_CV_kns(n_iter=2, n_folds=5)
+gbc_mean, gbc_std = n_fold_CV_gbc(n_iter=1, n_folds=5)
