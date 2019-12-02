@@ -94,7 +94,7 @@ def n_fold_CV_kns(n_iter=10, n_folds=5):
     kns = KNeighborsClassifier(algorithm = "auto",
                                weights = "distance",
                                n_jobs = -1)
-    kns_param_grid = {"kneighborsclassifier__n_neighbors": range(5,9)}
+    kns_param_grid = {"kneighborsclassifier__n_neighbors": range(5,16)}
     test_scores = []
     for i in range(n_iter):
         print(f"Iteration {i+1}")
@@ -106,5 +106,5 @@ def n_fold_CV_kns(n_iter=10, n_folds=5):
 
 #random_mean, random_std = n_fold_CV_rfc(n_iter=1, n_folds=5)
 #logit_mean, logit_std = n_fold_CV_logit(n_iter=5, n_folds=5)
-#kns_mean, knss_std = n_fold_CV_kns(n_iter=2, n_folds=5)
-gbc_mean, gbc_std = n_fold_CV_gbc(n_iter=1, n_folds=5)
+kns_mean, knss_std = n_fold_CV_kns(n_iter=1, n_folds=5)
+#gbc_mean, gbc_std = n_fold_CV_gbc(n_iter=1, n_folds=5)
