@@ -1,9 +1,6 @@
 
 # Digital Paleography of the Ávila Bible: Classification of handwriting in a medieval manuscript
 
-
-#### -- Project Status: [Completed]
-
 ## Objective
 The goal of this project was to investigate the Ávila Bible handwriting data set while practising the skills needed to implement a data science project from start to finish.
 
@@ -12,7 +9,8 @@ The goal of this project was to investigate the Ávila Bible handwriting data se
 * Preprocessing Pipelines
 * Cross Validation (k-folds)
 * Machine Learning
-* Evaluation Metrics 
+* Evaluation Metrics
+* Global Feature Importance
 
 ### Technologies and Packages
 * Python 3.7.3
@@ -29,15 +27,36 @@ The Ávila Bible is a medieval manuscript that was created in the 12th-century i
 ## Repository Organization and Getting Started
 
 ├── data/
+
 ├── figures/
+
 ├── results/
+
 ├── reports/
+
 ├── src/
+
 ├── LICENSE
+
 └── README.md
 
 1. Clone this repo (for help see this [tutorial](https://help.github.com/articles/cloning-a-repository/)).
-2. Raw and preprocessed data is found [here](avila/data).
-3. Preprocessing,  scripts are being kept [here](avila/src)
-4. etc...
+2. Raw and preprocessed data is found [here](https://github.com/ABerry057/avila/tree/master/data).
+3. All figures, including EDA and evaluation graphics, are found [here](https://github.com/ABerry057/avila/tree/master/figures))
+4. Final classification model file is found [here](https://github.com/ABerry057/avila/tree/master/results))
+5. Background literature, presentation slideshows, and written reports are found [here](https://github.com/ABerry057/avila/tree/master/reports))
+6. Preprocessing, EDA, cross validation, evaluation metrics, and feature importance scripts are found [here](https://github.com/ABerry057/avila/tree/master/src)
+7. See the LICENSE for permitted use or redistribution of this software
+
+## Contributors
+
+* Alexander Berry, Primary Author
+* Andras Zsom, Instructor
+
+Authors of the original paper and data set
+* Claudio de Stefano
+* Francesco Fontanella
+* Marilena Maniaci
+* Alessandra Scotto di Freca
+
 

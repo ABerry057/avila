@@ -3,10 +3,7 @@ Metrics for classification
 """
 import pickle
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.metrics import multilabel_confusion_matrix
-from sklearn.utils.multiclass import unique_labels
 from os.path import dirname, abspath
 
 parent_dir = dirname(dirname(abspath(__file__))) #parent directory path
@@ -20,6 +17,8 @@ file.close()
 
 y_pred = grid.predict(X_test)
 
-confusion matrices = multilabel_confusion_matrix(y_true,
+confusion_matrices = multilabel_confusion_matrix(y_true,
                                                  y_pred,
                                                  labels = [i for i in range(0,12)])
+cm_0 = confusion_matrices[0]
+cm_1 = confusion_matrices[1]
