@@ -26,19 +26,15 @@ The Ávila Bible is a medieval manuscript that was created in the 12th-century i
 
 ## Repository Organization and Getting Started
 
+```
 ├── data/
-
 ├── figures/
-
 ├── results/
-
 ├── reports/
-
 ├── src/
-
 ├── LICENSE
-
 └── README.md
+```
 
 1. Clone this repo (for help see this [tutorial](https://help.github.com/articles/cloning-a-repository/)).
 2. Raw and preprocessed data is found [here](https://github.com/ABerry057/avila/tree/master/data).
