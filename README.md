@@ -1,6 +1,8 @@
 
 # Digital Paleography of the Ávila Bible: Classification of handwriting in a medieval manuscript
 
+![Pages of the Ávila Bible](figures/illustration.png)
+
 ## Objective
 The goal of this project was to investigate the Ávila Bible handwriting data set while practising the skills needed to implement a data science project from start to finish.
 
