@@ -3,11 +3,7 @@ Feature importance via permutation tests
 """
 import numpy as np
 import pandas as pd
-from sklearn.pipeline import make_pipeline
-from sklearn.model_selection import GridSearchCV
-from sklearn.model_selection import train_test_split
-from sklearn.model_selection import StratifiedKFold
-from sklearn.neighbors import KNeighborsClassifier
+import pickle
 import matplotlib.pylab as plt
 from os.path import dirname, abspath
 
@@ -19,32 +15,7 @@ y = data['class'].values
 X = data.drop('class',axis=1).values
 ftr_names = data.columns[:-1]
 
-def ML_pipeline_kfold(X,y,random_state,n_folds, model, param_grid):
-    # create a test set
-    X_other, X_test, y_other, y_test = train_test_split(X, y, test_size=0.2, random_state = random_state)
-    # splitter for _other
-    kf = StratifiedKFold(n_splits=n_folds,shuffle=True,random_state=random_state)
-    pipe = make_pipeline(model)
-    # prepare gridsearch
-    grid = GridSearchCV(pipe, param_grid=param_grid,cv=kf, return_train_score = True,n_jobs=-1,verbose=10)
-    # do kfold CV on _other
-    grid.fit(X_other, y_other)
-    return grid, X_test, y_test
-
-model = KNeighborsClassifier(weights='distance')
-param_grid = {"kneighborsclassifier__n_neighbors": range(1,21)}
-grid, X_test, y_test = ML_pipeline_kfold(X = X, y = y, random_state = 19, n_folds = 5, model = model, param_grid = param_grid)
-print(grid.best_score_)
-print(grid.score(X_test,y_test))
-print(grid.best_params_)
-
-# save the output
-import pickle
-file = open(parent_dir + '/results/grid.save', 'wb')
-pickle.dump((grid,X_test,y_test),file)
-file.close()
-
-file = open('/results/grid.save', 'rb')
+file = open(parent_dir + '/results/grid.save', 'rb')
 grid, X_test, y_test = pickle.load(file)
 file.close()
 
