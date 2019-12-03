@@ -1,7 +1,0 @@
-To use the grid.save file, use the following lines in a Python script:
-
-file = open('/results/grid.save', 'rb')
-grid, X_test, y_test = pickle.load(file)
-file.close()
-
-This will create three objects: grid, X_test, and y_test.
