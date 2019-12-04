@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import pickle
 import matplotlib.pylab as plt
+import random
 from os.path import dirname, abspath
 
 parent_dir = dirname(dirname(abspath(__file__))) #parent directory path
@@ -16,13 +17,17 @@ X = data.drop('class',axis=1).values
 ftr_names = data.columns[:-1]
 
 file = open(parent_dir + '/results/grid.save', 'rb')
-grid, X_test, y_test = pickle.load(file)
+models, X_test, y_test = pickle.load(file)
 file.close()
+
+#choose a random model for feature importance instead of averaging to save time
+np.random.seed = 19
+model = random.choice(models)
 
 nr_runs = 10
 scores = np.zeros([len(ftr_names),nr_runs])
 
-test_score = grid.score(X_test,y_test)
+test_score = model.score(X_test,y_test)
 print('test score = ',test_score)
 print('test baseline = ',np.sum(y_test == 0)/len(y_test))
 # loop through the features
@@ -33,7 +38,7 @@ for i in range(len(ftr_names)):
         X_test_df = pd.DataFrame(X_test, columns=ftr_names)
         X_test_shuffled = X_test_df.copy()
         X_test_shuffled[ftr_names[i]] = np.random.permutation(X_test_df[ftr_names[i]].values)
-        acc_scores.append(grid.score(X_test_shuffled,y_test))
+        acc_scores.append(model.score(X_test_shuffled,y_test))
     print('   shuffled test score:',np.around(np.mean(acc_scores),3),'+/-',np.around(np.std(acc_scores),3))
     scores[i] = acc_scores
     
