@@ -40,9 +40,9 @@ The Ávila Bible is a medieval manuscript that was created in the 12th-century i
 
 1. Clone this repo (for help see this [tutorial](https://help.github.com/articles/cloning-a-repository/)).
 2. Raw and preprocessed data is found [here](https://github.com/ABerry057/avila/tree/master/data).
-3. All figures, including EDA and evaluation graphics, are found [here](https://github.com/ABerry057/avila/tree/master/figures))
-4. Final classification model file is found [here](https://github.com/ABerry057/avila/tree/master/results))
-5. Background literature, presentation slideshows, and written reports are found [here](https://github.com/ABerry057/avila/tree/master/reports))
+3. All figures, including EDA and evaluation graphics, are found [here](https://github.com/ABerry057/avila/tree/master/figures)
+4. Final classification model file is found [here](https://github.com/ABerry057/avila/tree/master/results)
+5. Background literature, presentation slideshows, and written reports are found [here](https://github.com/ABerry057/avila/tree/master/reports)
 6. Preprocessing, EDA, cross validation, evaluation metrics, and feature importance scripts are found [here](https://github.com/ABerry057/avila/tree/master/src)
 7. See the LICENSE for permitted use or redistribution of this software
 
